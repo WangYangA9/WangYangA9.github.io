@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>存储接口的幂等实现</title>
+      <link href="/2020/06/12/idempotent-implementation-of-db-interface/"/>
+      <url>/2020/06/12/idempotent-implementation-of-db-interface/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      <categories>
+          
+          <category> 后端技术 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 幂等 </tag>
+            
+            <tag> 存储 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>data-switch</title>
       <link href="/2020/06/09/data-switch/"/>
       <url>/2020/06/09/data-switch/</url>
