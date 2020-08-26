@@ -4,8 +4,11 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="存储接口的幂等实现, WangYangA9">
-    <meta name="description" content="存储接口的幂等实现 | WangYangA9">
+    <meta name="keywords" content="Fabric证书与账户体系, WangYangA9">
+    <meta name="description" content="成员提供者服务MSP(Membership service provider)
+Fabric的MSP是一个提供抽象化成员操作框架的组件
+MSP将颁发与校验证书，以及用户认证的密码学机制与协议都抽象了出来
+一个MSP可以自定义身份、身份管理(">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +16,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>存储接口的幂等实现 | WangYangA9</title>
+    <title>Fabric证书与账户体系 | WangYangA9</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -260,12 +263,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/17.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/21.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">存储接口的幂等实现</h1>
+                    <h1 class="description center-align post-title">Fabric证书与账户体系</h1>
                 </div>
             </div>
         </div>
@@ -382,12 +385,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E5%B9%82%E7%AD%89/">
-                                <span class="chip bg-color">幂等</span>
+                            <a href="/tags/CA%E8%AF%81%E4%B9%A6/">
+                                <span class="chip bg-color">CA证书</span>
                             </a>
                         
-                            <a href="/tags/%E5%AD%98%E5%82%A8/">
-                                <span class="chip bg-color">存储</span>
+                            <a href="/tags/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/">
+                                <span class="chip bg-color">非对称加密</span>
                             </a>
                         
                     </div>
@@ -398,8 +401,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E5%90%8E%E7%AB%AF%E6%8A%80%E6%9C%AF/" class="post-category">
-                                后端技术
+                            <a href="/categories/%E5%8C%BA%E5%9D%97%E9%93%BE/" class="post-category">
+                                区块链
                             </a>
                         
                     </div>
@@ -411,7 +414,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2020-06-12
+                    2020-08-24
                 </div>
                 
 
@@ -420,7 +423,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    0
+                    2.9k
                 </div>
                 
 
@@ -433,7 +436,104 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                
+                <h1 id="成员提供者服务MSP-Membership-service-provider"><a href="#成员提供者服务MSP-Membership-service-provider" class="headerlink" title="成员提供者服务MSP(Membership service provider)"></a>成员提供者服务MSP(Membership service provider)</h1><ul>
+<li>Fabric的MSP是一个提供抽象化成员操作框架的组件</li>
+<li>MSP将颁发与校验证书，以及用户认证的密码学机制与协议都抽象了出来</li>
+<li>一个MSP可以自定义身份、身份管理(身份验证)与认证(生成与校验签名)的规则</li>
+<li>一个Fabric区块链网络可以被一个或多个MSP管理。这提供了模块化的成员操作和兼容不同成员标准与框架的互操作性<h2 id="MSP配置"><a href="#MSP配置" class="headerlink" title="MSP配置"></a>MSP配置</h2></li>
+<li>初始化MSP实例之前，每一个Peer节点和orderer及诶单都要在本地指定其配置，并在channel上启用peer、orderer及client的身份验证和各自签名验证</li>
+<li>为了方便MSP的引用，每个MSP都需要一个特定的名字(例如msp1，org2，org3.divA)。在一个channel中，MSP成员管理规则表示一个团体，组织或组织分工时，该名称会被引用。MSP标识必须唯一，orderer节点在检测到两个MSP标识符相同是会启动失败。</li>
+<li>MSP默认情况下，身份(证书)与签名验证需要指定一组参数。这些参数来自<strong>RFC 5280标准</strong>。包括<ul>
+<li>一个自签名的证书列表(满足X.509标准)</li>
+<li>一个用于标识该MSP验证过的中间CA的X.509证书列表，用于证书的校验。这些证书应该备新人员的一个证书所认证；中间的CA则是可选参数</li>
+<li>一个具有可验证路径的X.509证书列表(该路径图通往信任源的一个整数)，以 表示该MSP的管理员。这些证书的所有者对MSP配置的更改要求都是经过授权的(例如根CA 中间CA)</li>
+<li>一个组织单元列表，该MSP的合法成员应该将其包含进他们的X.509证书。这是一个可选的配置参数，比如：当多个组织使用相同的信任源、中间CA以及组织为他们的成员保留了一个OU区的时候，会配置此参数</li>
+<li>一个证书吊销列表(CRLs)的清单，清单每一项对应一个已登记的(中间或根)MSP证书颁发机构(CA)，这是可选的参数</li>
+<li>一个自签名的证书列表，以构成TLS新人员，服务于TLS证书</li>
+<li>一个表示该provider关注的中间TLS CA的X.509证书列表。这些证书应该备TLS信任源的一个证书所认证</li>
+</ul>
+</li>
+<li>除了验证相关参数外，为了使MSP可以对已实例化的节点进行签名或验证，需要指定：<ul>
+<li>用于节点签名的签名密钥(只支持ECDSA密钥)</li>
+<li>节点的X.509证书，对MSP验证参数机制而言是一个有效的身份</li>
+</ul>
+</li>
+<li>MSP身份永远不会过期，只能通过添加到合适的CRL上来被注销。另外，暂时不支持吊销TLS证书</li>
+</ul>
+<h2 id="MSP身份验证规则"><a href="#MSP身份验证规则" class="headerlink" title="MSP身份验证规则"></a>MSP身份验证规则</h2><ul>
+<li>MSP可以被一系列的根证书授权配置，也可以通过一系列中间证书授权配置。</li>
+<li>MSP的ICA证书，必须被它的根证书或中检证书其中之一签署。一个MSP的配置中可能包含一个证书撤销列表或CRL。如果任一个MSP的根证书授权被放在CRL列表中，那么MSP的配置中必须不包含其他任何也被列在CRL的中间证书，否则MSP启动失败</li>
+<li>任何一个根证书是都是一个授权树的根。也就是说，每个根证书可能是不止一个中检证书的签署者，并且这些中间证书会成为其他中检证书或用户证书的签署者<pre><code>      rCA1                rCA2         rCA3
+    /    \                 |            |
+ iCA1    iCA2             iCA3          id
+  / \      |               |
+iCA11 iCA12 id              id
+|
+id</code></pre></li>
+<li>默认的MSP实现接受由相应机构签名的X.509证书作为有效身份</li>
+<li>在上述树形中，只有被iCA11 iCA12 iCA2 rCA3签署的证书才会被认为有效。被内部节点签署的证书会被拒绝。</li>
+<li>特别的，如果在MSP配置中指定了一个或多个组织单位，证书的有效性也会被类似的方式影响</li>
+<li>回想一下，在MSP配置中将组织单位指定为两对值，例如(负整数，ou-string)分别表示对那个组织单位进行认证的证书颁发机构和实际的组织单位标识符</li>
+<li>如果证书C由在MSP配置中指定了的组织单位的iCA或RCA签署，则C除其他要求外，如果在其OU字段中包括ou-string，则认为C有效</li>
+</ul>
+<h1 id="如何生成MSP证书及其签名密钥"><a href="#如何生成MSP证书及其签名密钥" class="headerlink" title="如何生成MSP证书及其签名密钥"></a>如何生成MSP证书及其签名密钥</h1><ul>
+<li>要想生成X.509证书以满足MSP配置<ul>
+<li>应用程序可以使用Openssl</li>
+<li>另一个选择是cryptogen工具</li>
+<li>Hyperledger Fabric CA也可用于生辰高配置MSP所需的密钥及证书</li>
+</ul>
+</li>
+</ul>
+<h2 id="peer-amp-orderer侧MSP的设置"><a href="#peer-amp-orderer侧MSP的设置" class="headerlink" title="peer&amp;orderer侧MSP的设置"></a>peer&amp;orderer侧MSP的设置</h2><ul>
+<li>要想(为peer节点或orderer节点)简历本地MSP，管理员应创建一个文件夹，并包含下列6个子文件夹与一个文件：<ol>
+<li>文件夹admincerts包含如下PEM文件：每个PEM文件对应一个管理员证书</li>
+<li>文件夹cacerts包含如下PEM文件：每个PEM文件对应一个根CA证书</li>
+<li>(可选)文件夹intermediatecerts包含如下PEM文件：每个PEM文件对应于一个中间CA的证书</li>
+<li>(可选)文件config.yaml包含相关的OU的信息；后者作为&lt;Certificate,OrganizationalUnitIdentifier&gt;的一部分被定义；其中Certificate表示通往(根或中间)CA的证书的相对路径，这些CA用于为组织成员发证(如cacerts/cacert.pem)；OrganizationalUnitIdentifier表示预期会出现在X.509证书中的实际字符串</li>
+<li>(可选)文件夹crls包含现骨干CRL</li>
+<li>文件夹keystore包含一个PEM文件及节点的签名密钥；值的强调的是，现阶段不支持RSA密钥</li>
+<li>文件夹signcerts：包含一个PEM文件及节点的X.509证书</li>
+<li>（可选）文件夹tlscacerts包含如下PEM文件：每个PEM文件对应于一个根TLS根CA的证书</li>
+<li>可选）文件夹tlsintermediatecerts包含如下PEM文件：每个PEM文件对应于一个中间TLS CA的证书</li>
+</ol>
+</li>
+<li>在节点配置文件中(对peer节点而言是core.yaml文件，对orderer节点而言则是orderer.yaml)，我们需要指定到mspconfig文件夹的路径，以及节点的MSP的MSP标识符。</li>
+<li>mspconfig文件的路径预期是一个对FABRIC_CFG_PATH的相对路径，且会作为参数masCOnfigPAth和LocalMSPDir的值分别提供给peer和orderer节点</li>
+<li>节点MSP的MSP标识符则会作为参数localMSPID和LocalMSPID的值分别提供给peer节点和orderer节点</li>
+<li>运行环境可以通过为peer使用CORE前缀(例CORE_PEER_LOCALMSPID)及为ordeer使用ORDERER前缀(例ORDERER_VENERAL_LOCALMSPID)对以上变量进行复写</li>
+<li>对于orderer的设置，我们需要生成并为orderer提供系统channel的创世区块</li>
+<li>对”本地”的MSP进行配置只能手动进行，且该过程需要重启peer节点和orderer节点。在后续会通过调用系统chaincode的方式来实现，使得不比停止node</li>
+</ul>
+<h2 id="Channel-MSP的配置"><a href="#Channel-MSP的配置" class="headerlink" title="Channel MSP的配置"></a>Channel MSP的配置</h2><ul>
+<li>系统起始节点，我们需要指定网络中出现的所有MSP的验证参数，且这些参数需要在系统channel的创世区块中指定。钱问题到，MSP的验证参数包括MSP标识符、信任源证书、中间CA和管理员的证书，以及OU说明和CLR。系统的创世区块在orderer节点设置节点被提供给它们，且允许它们批准创建channel的请求。如果创世区块包含两个有标识符的MSP，那么orderer节点将拒绝系统创世区块，导致网络引导失败</li>
+<li>对于应用程序channel，创世区块中需要包含管理channel的那部分MSP的验证组件</li>
+<li>应用需要肩负以下责任：<ul>
+<li>在另一个或多个peer节点加入到channel中之前，确保channel的创世区块(或最新配置区块)包含正确的MSP配置信息</li>
+</ul>
+</li>
+<li>在configxgen工具的帮助下引导假设channel时，我们这样来配置channel MSP：将MSP验证参数加入mspconfig文件夹，并将该路径加入到configtx.yaml相关部分</li>
+<li>要想对channel中MSP重新配置，包含发布与MSP的CA相关的证书吊销列表，需要MSP管理员的证书所有者创建config_update对象实现，由管理员管理的客户端向该MSP所在的channel发布更新</li>
+</ul>
+<h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><h2 id="为组织和MSP建立映射"><a href="#为组织和MSP建立映射" class="headerlink" title="为组织和MSP建立映射"></a>为组织和MSP建立映射</h2><ul>
+<li>如果选择其他类型的映射，需要注意以下几点<ul>
+<li>一个组织对应多个MSP。一个组织有各种各样的部门，每个部门以其MSP为代表。在这种情况下，一个peer节点只能被单个MSP拥有，且不会识别相同组织内表示在其他MSP的节点。也就是说，peer节点可以与相同子分支下的一系列其他peer节点共享组织数据，而不是所有构成组织的节点</li>
+<li>多个组织对应一个MSP。这对应这种情况：一个由相似成员结构所管理的组织联盟。这时，peer节点可以与相同MSP下的其他节点互发组织范围的数据，节点是否属于同一个组织并不重要。这对于MSP的定义及peer节点的配置是个限制。<h2 id="一个组织有多个分支（组织单元），各个分支想要获取不同channel的访问权限"><a href="#一个组织有多个分支（组织单元），各个分支想要获取不同channel的访问权限" class="headerlink" title="一个组织有多个分支（组织单元），各个分支想要获取不同channel的访问权限"></a>一个组织有多个分支（组织单元），各个分支想要获取不同channel的访问权限</h2></li>
+<li>定义一个MSP来容纳所有组织的全部成员。MSP配置包含一个根CA、中间CA和管理员证书的列表；成员身份会包含一个组织单元(OU)的所属关系。接下来可以定义用于获取特定OU成员的策略，这些策略可以建立channel的读写策略或者chaincode的背书策略。这种方法的局限是gossip peer节点会和本地MSP下的其他peer节点当做相同组织内的成员，并与之分享组织范围内的数据</li>
+<li>为每个分支建立一个MSP。这需要为每个分支引入一组根CA证书。中间CA证书和管理员证书，这样每条通往MSP的路径都不会重叠。这意味着，每个子分支的不同中间CA都会被利用起来。这样的缺点是要管理多个MSP，不过这避免了前面方法出现的问题。我们也可以利用MSP配置的OU扩展来为每个分支定义一个MSP<h2 id="将客户端从组织的peer节点中分离"><a href="#将客户端从组织的peer节点中分离" class="headerlink" title="将客户端从组织的peer节点中分离"></a>将客户端从组织的peer节点中分离</h2></li>
+</ul>
+</li>
+</ul>
+<h2 id="管理员和CA证书"><a href="#管理员和CA证书" class="headerlink" title="管理员和CA证书"></a>管理员和CA证书</h2><ul>
+<li>将MSP管理员证书设置的与被信任根认证的证书或中间CA证书不同是很重要的。这是一种常见的安全做法，即将成员管理的责任从发行新证书与验证已有证书中拆分出来</li>
+</ul>
+<h2 id="将中间CA加入黑名单"><a href="#将中间CA加入黑名单" class="headerlink" title="将中间CA加入黑名单"></a>将中间CA加入黑名单</h2><ul>
+<li>像上文所说的，重新配置MSP是通过一种重配置机制完成的(手动重新配置本地MSP实例，并通过channel合理构建发送给MSP实例的config_update消息)。显然，我们有两种方法保证一个中间CA被MSP身份验证机制彻底忽视：<ul>
+<li>重新配置MSP并使它信任中间CA证书列表不再包含中间CA的证书。对于本地配置的MSP，这意味着该CA的证书从intermediatecerts文件夹中被删除了</li>
+<li>重新配置MSP并使它包含由信任源产生的CRL，该CRL会通知MSP废止中间CA证书的使用</li>
+</ul>
+</li>
+</ul>
+
             </div>
             <hr/>
 
@@ -458,7 +558,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://wangyanga9.gitee.io/2020/06/12/idempotent-implementation-of-db-interface/">http://wangyanga9.gitee.io/2020/06/12/idempotent-implementation-of-db-interface/</a>
+                    <a href="http://wangyanga9.gitee.io/2020/08/24/fabric-ca/">http://wangyanga9.gitee.io/2020/08/24/fabric-ca/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -496,12 +596,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E5%B9%82%E7%AD%89/">
-                                    <span class="chip bg-color">幂等</span>
+                                <a href="/tags/CA%E8%AF%81%E4%B9%A6/">
+                                    <span class="chip bg-color">CA证书</span>
                                 </a>
                             
-                                <a href="/tags/%E5%AD%98%E5%82%A8/">
-                                    <span class="chip bg-color">存储</span>
+                                <a href="/tags/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/">
+                                    <span class="chip bg-color">非对称加密</span>
                                 </a>
                             
                         </div>
@@ -671,22 +771,19 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/08/24/fabric-ca/">
+                <a href="/2020/08/24/hello-world/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="Fabric证书与账户体系">
+                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
                         
-                        <span class="card-title">Fabric证书与账户体系</span>
+                        <span class="card-title">Hello World</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            成员提供者服务MSP(Membership service provider)
-Fabric的MSP是一个提供抽象化成员操作框架的组件
-MSP将颁发与校验证书，以及用户认证的密码学机制与协议都抽象了出来
-一个MSP可以自定义身份、身份管理(
+                            Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hex
                         
                     </div>
                     <div class="publish-info">
@@ -695,27 +792,11 @@ MSP将颁发与校验证书，以及用户认证的密码学机制与协议都�
                         </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/%E5%8C%BA%E5%9D%97%E9%93%BE/" class="post-category">
-                                    区块链
-                                </a>
-                            
+                            <i class="fas fa-user fa-fw"></i>
+                            WangYang
                             
                         </span>
                     </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/CA%E8%AF%81%E4%B9%A6/">
-                        <span class="chip bg-color">CA证书</span>
-                    </a>
-                    
-                    <a href="/tags/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/">
-                        <span class="chip bg-color">非对称加密</span>
-                    </a>
-                    
                 </div>
                 
             </div>
@@ -727,13 +808,13 @@ MSP将颁发与校验证书，以及用户认证的密码学机制与协议都�
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/06/09/data-switch/">
+                <a href="/2020/06/12/idempotent-implementation-of-db-interface/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="data-switch">
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="存储接口的幂等实现">
                         
-                        <span class="card-title">data-switch</span>
+                        <span class="card-title">存储接口的幂等实现</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -744,14 +825,14 @@ MSP将颁发与校验证书，以及用户认证的密码学机制与协议都�
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-06-09
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-06-12
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E6%95%B0%E6%8D%AE%E4%BA%A4%E6%8D%A2/" class="post-category">
-                                    数据交换
+                            <a href="/categories/%E5%90%8E%E7%AB%AF%E6%8A%80%E6%9C%AF/" class="post-category">
+                                    后端技术
                                 </a>
                             
                             
@@ -761,16 +842,12 @@ MSP将颁发与校验证书，以及用户认证的密码学机制与协议都�
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/">
-                        <span class="chip bg-color">区块链</span>
+                    <a href="/tags/%E5%B9%82%E7%AD%89/">
+                        <span class="chip bg-color">幂等</span>
                     </a>
                     
-                    <a href="/tags/%E5%AE%89%E5%85%A8%E6%B2%99%E7%AE%B1/">
-                        <span class="chip bg-color">安全沙箱</span>
-                    </a>
-                    
-                    <a href="/tags/%E5%8A%A0%E5%AF%86%E9%80%9A%E4%BF%A1/">
-                        <span class="chip bg-color">加密通信</span>
+                    <a href="/tags/%E5%AD%98%E5%82%A8/">
+                        <span class="chip bg-color">存储</span>
                     </a>
                     
                 </div>
