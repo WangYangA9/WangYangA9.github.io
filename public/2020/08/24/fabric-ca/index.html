@@ -29,7 +29,7 @@ MSP将颁发与校验证书，以及用户认证的密码学机制与协议都�
     
     <script src="/libs/jquery/jquery.min.js"></script>
     
-<meta name="generator" content="Hexo 4.2.1"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
 <link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
@@ -263,7 +263,7 @@ MSP将颁发与校验证书，以及用户认证的密码学机制与协议都�
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/21.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
@@ -423,7 +423,7 @@ MSP将颁发与校验证书，以及用户认证的密码学机制与协议都�
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.9k
+                    3k
                 </div>
                 
 
@@ -517,19 +517,26 @@ id</code></pre></li>
 <h1 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h1><h2 id="为组织和MSP建立映射"><a href="#为组织和MSP建立映射" class="headerlink" title="为组织和MSP建立映射"></a>为组织和MSP建立映射</h2><ul>
 <li>如果选择其他类型的映射，需要注意以下几点<ul>
 <li>一个组织对应多个MSP。一个组织有各种各样的部门，每个部门以其MSP为代表。在这种情况下，一个peer节点只能被单个MSP拥有，且不会识别相同组织内表示在其他MSP的节点。也就是说，peer节点可以与相同子分支下的一系列其他peer节点共享组织数据，而不是所有构成组织的节点</li>
-<li>多个组织对应一个MSP。这对应这种情况：一个由相似成员结构所管理的组织联盟。这时，peer节点可以与相同MSP下的其他节点互发组织范围的数据，节点是否属于同一个组织并不重要。这对于MSP的定义及peer节点的配置是个限制。<h2 id="一个组织有多个分支（组织单元），各个分支想要获取不同channel的访问权限"><a href="#一个组织有多个分支（组织单元），各个分支想要获取不同channel的访问权限" class="headerlink" title="一个组织有多个分支（组织单元），各个分支想要获取不同channel的访问权限"></a>一个组织有多个分支（组织单元），各个分支想要获取不同channel的访问权限</h2></li>
-<li>定义一个MSP来容纳所有组织的全部成员。MSP配置包含一个根CA、中间CA和管理员证书的列表；成员身份会包含一个组织单元(OU)的所属关系。接下来可以定义用于获取特定OU成员的策略，这些策略可以建立channel的读写策略或者chaincode的背书策略。这种方法的局限是gossip peer节点会和本地MSP下的其他peer节点当做相同组织内的成员，并与之分享组织范围内的数据</li>
-<li>为每个分支建立一个MSP。这需要为每个分支引入一组根CA证书。中间CA证书和管理员证书，这样每条通往MSP的路径都不会重叠。这意味着，每个子分支的不同中间CA都会被利用起来。这样的缺点是要管理多个MSP，不过这避免了前面方法出现的问题。我们也可以利用MSP配置的OU扩展来为每个分支定义一个MSP<h2 id="将客户端从组织的peer节点中分离"><a href="#将客户端从组织的peer节点中分离" class="headerlink" title="将客户端从组织的peer节点中分离"></a>将客户端从组织的peer节点中分离</h2></li>
+<li>多个组织对应一个MSP。这对应这种情况：一个由相似成员结构所管理的组织联盟。这时，peer节点可以与相同MSP下的其他节点互发组织范围的数据，节点是否属于同一个组织并不重要。这对于MSP的定义及peer节点的配置是个限制。</li>
 </ul>
 </li>
 </ul>
-<h2 id="管理员和CA证书"><a href="#管理员和CA证书" class="headerlink" title="管理员和CA证书"></a>管理员和CA证书</h2><ul>
+<h2 id="一个组织有多个分支（组织单元），各个分支想要获取不同channel的访问权限"><a href="#一个组织有多个分支（组织单元），各个分支想要获取不同channel的访问权限" class="headerlink" title="一个组织有多个分支（组织单元），各个分支想要获取不同channel的访问权限"></a>一个组织有多个分支（组织单元），各个分支想要获取不同channel的访问权限</h2><ul>
+<li>定义一个MSP来容纳所有组织的全部成员。MSP配置包含一个根CA、中间CA和管理员证书的列表；成员身份会包含一个组织单元(OU)的所属关系。接下来可以定义用于获取特定OU成员的策略，这些策略可以建立channel的读写策略或者chaincode的背书策略。这种方法的局限是gossip peer节点会和本地MSP下的其他peer节点当做相同组织内的成员，并与之分享组织范围内的数据</li>
+<li>为每个分支建立一个MSP。这需要为每个分支引入一组根CA证书。中间CA证书和管理员证书，这样每条通往MSP的路径都不会重叠。这意味着，每个子分支的不同中间CA都会被利用起来。这样的缺点是要管理多个MSP，不过这避免了前面方法出现的问题。我们也可以利用MSP配置的OU扩展来为每个分支定义一个MSP</li>
+</ul>
+<h2 id="将客户端从组织的peer节点中分离"><a href="#将客户端从组织的peer节点中分离" class="headerlink" title="将客户端从组织的peer节点中分离"></a>将客户端从组织的peer节点中分离</h2><h2 id="管理员和CA证书"><a href="#管理员和CA证书" class="headerlink" title="管理员和CA证书"></a>管理员和CA证书</h2><ul>
 <li>将MSP管理员证书设置的与被信任根认证的证书或中间CA证书不同是很重要的。这是一种常见的安全做法，即将成员管理的责任从发行新证书与验证已有证书中拆分出来</li>
 </ul>
 <h2 id="将中间CA加入黑名单"><a href="#将中间CA加入黑名单" class="headerlink" title="将中间CA加入黑名单"></a>将中间CA加入黑名单</h2><ul>
-<li>像上文所说的，重新配置MSP是通过一种重配置机制完成的(手动重新配置本地MSP实例，并通过channel合理构建发送给MSP实例的config_update消息)。显然，我们有两种方法保证一个中间CA被MSP身份验证机制彻底忽视：<ul>
-<li>重新配置MSP并使它信任中间CA证书列表不再包含中间CA的证书。对于本地配置的MSP，这意味着该CA的证书从intermediatecerts文件夹中被删除了</li>
-<li>重新配置MSP并使它包含由信任源产生的CRL，该CRL会通知MSP废止中间CA证书的使用</li>
+<li><p>像上文所说的，重新配置MSP是通过一种重配置机制完成的(手动重新配置本地MSP实例，并通过channel合理构建发送给MSP实例的config_update消息)。显然，我们有两种方法保证一个中间CA被MSP身份验证机制彻底忽视：</p>
+<ul>
+<li><p>重新配置MSP并使它信任中间CA证书列表不再包含中间CA的证书。对于本地配置的MSP，这意味着该CA的证书从intermediatecerts文件夹中被删除了</p>
+</li>
+<li><p>重新配置MSP并使它包含由信任源产生的CRL，该CRL会通知MSP废止中间CA证书的使用</p>
+</li>
+<li><p>MSP身份的根CA及MSP TLS证书的根CA(以及相关的中间CA)需要在不同的文件夹中声明。这是为了避免混淆不同等级的证书。且MSP身份与TLS证书都允许重用相同的CA，不过建议实际中避免这样做。</p>
+</li>
 </ul>
 </li>
 </ul>
@@ -556,7 +563,7 @@ id</code></pre></li>
                     <i class="fas fa-link">
                         文章链接:
                     </i>
-                </span>
+                    </span>
                 <span class="reprint-info">
                     <a href="http://wangyanga9.gitee.io/2020/08/24/fabric-ca/">http://wangyanga9.gitee.io/2020/08/24/fabric-ca/</a>
                 </span>
@@ -569,7 +576,7 @@ id</code></pre></li>
                 </span>
                 <span class="reprint-info">
                     本博客所有文章除特別声明外，均采用
-                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY-NC-ND 4.0</a>
                     许可协议。转载请注明来源
                     <a href="http://wangyanga9.gitee.io" target="_blank">WangYang</a>
                     !
@@ -767,36 +774,57 @@ id</code></pre></li>
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2020/08/24/hello-world/">
+                <a href="/2020/08/24/fabric-ca/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="Fabric证书与账户体系">
                         
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title">Fabric证书与账户体系</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hex
+                            成员提供者服务MSP(Membership service provider)
+Fabric的MSP是一个提供抽象化成员操作框架的组件
+MSP将颁发与校验证书，以及用户认证的密码学机制与协议都抽象了出来
+一个MSP可以自定义身份、身份管理(
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-08-24
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-08-24
+                            </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            WangYang
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E5%8C%BA%E5%9D%97%E9%93%BE/" class="post-category">
+                                    区块链
+                                </a>
+                            
                             
                         </span>
                     </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/CA%E8%AF%81%E4%B9%A6/">
+                        <span class="chip bg-color">CA证书</span>
+                    </a>
+                    
+                    <a href="/tags/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/">
+                        <span class="chip bg-color">非对称加密</span>
+                    </a>
+                    
                 </div>
                 
             </div>
@@ -808,31 +836,34 @@ id</code></pre></li>
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2020/06/12/idempotent-implementation-of-db-interface/">
+                <a href="/2020/07/11/rong-qi-ji-zhu-zhong-de-chong-yao-gai-nian/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="存储接口的幂等实现">
+                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="容器技术中的重要概念">
                         
-                        <span class="card-title">存储接口的幂等实现</span>
+                        <span class="card-title">容器技术中的重要概念</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
+                            概念Cgroups——限制Namespace——隔离docker exec
+加入Namespace
+
+rootfs——一致性UnionFS
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2020-06-12
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-07-11
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E5%90%8E%E7%AB%AF%E6%8A%80%E6%9C%AF/" class="post-category">
-                                    后端技术
+                            <a href="/categories/k8s/" class="post-category">
+                                    k8s
                                 </a>
                             
                             
@@ -842,12 +873,8 @@ id</code></pre></li>
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%B9%82%E7%AD%89/">
-                        <span class="chip bg-color">幂等</span>
-                    </a>
-                    
-                    <a href="/tags/%E5%AD%98%E5%82%A8/">
-                        <span class="chip bg-color">存储</span>
+                    <a href="/tags/%E5%AE%B9%E5%99%A8%E6%8A%80%E6%9C%AF/">
+                        <span class="chip bg-color">容器技术</span>
                     </a>
                     
                 </div>
@@ -867,8 +894,6 @@ id</code></pre></li>
 
 <!-- 代码语言 -->
 
-<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
-
     
 <!-- 代码块复制 -->
 
@@ -876,8 +901,6 @@ id</code></pre></li>
 
 
 <!-- 代码块收缩 -->
-
-<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
 
 
 <!-- 代码块折行 -->
@@ -997,7 +1020,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3k</span>&nbsp;字
+                class="white-color">5.9k</span>&nbsp;字
             
             
             

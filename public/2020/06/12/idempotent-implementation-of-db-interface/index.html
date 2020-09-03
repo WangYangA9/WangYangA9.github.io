@@ -5,7 +5,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="keywords" content="存储接口的幂等实现, WangYangA9">
-    <meta name="description" content="存储接口的幂等实现 | WangYangA9">
+    <meta name="description" content="如何实现接口幂等性（重复调用）
+在平时的调用中，由于用户点击两次、网络波动等原因，经常会放生同样的请求发送两次的情况。作为后端存储系统，要对这种情况有处理能力，保证不管是请求一次还是多次，请求的结果是一样的。这就是接口的幂等性实现。
+
+解决">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -26,7 +29,7 @@
     
     <script src="/libs/jquery/jquery.min.js"></script>
     
-<meta name="generator" content="Hexo 4.2.1"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<meta name="generator" content="Hexo 4.2.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
 <link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
@@ -260,7 +263,7 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/17.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
@@ -420,7 +423,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    0
+                    622
                 </div>
                 
 
@@ -433,7 +436,43 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                
+                <h2 id="如何实现接口幂等性（重复调用）"><a href="#如何实现接口幂等性（重复调用）" class="headerlink" title="如何实现接口幂等性（重复调用）"></a>如何实现接口幂等性（重复调用）</h2><ul>
+<li>在平时的调用中，由于用户点击两次、网络波动等原因，经常会放生同样的请求发送两次的情况。作为后端存储系统，要对这种情况有处理能力，保证不管是请求一次还是多次，请求的结果是一样的。这就是接口的幂等性实现。</li>
+</ul>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ul>
+<li>利用数据库的主键唯一约束，在插入数据时带上主键，而不是自动生成</li>
+<li>以电商项目为例，项目架构如下:<pre class="mermaid">sequenceDiagram
+用户->>前端: 下单
+前端->>订单号服务: 生成订单号
+订单号服务->>前端: 返回订单号
+前端->>用户: 获得订单号
+用户->>前端: 提交订单
+前端->>订单服务: 创建订单
+订单服务->>前端: 成功/失败
+前端->>用户: 成功/失败</pre></li>
+<li>特别的，如果是由于重复插入导致的失败，不要把错误展示给用户，否则会造成误导</li>
+</ul>
+<h2 id="如何解决ABA问题（调用顺序）"><a href="#如何解决ABA问题（调用顺序）" class="headerlink" title="如何解决ABA问题（调用顺序）"></a>如何解决ABA问题（调用顺序）</h2><ul>
+<li>在高并发环境下，可能会在短时间内对一条数据做多次更新</li>
+<li>对数据的更新，本质是一次数据库的update。如果，第一次更新由于某些原因，没有立即生效（网络延迟等），第二次更新先生效，此时数据又被更新为第一次请求的数据。这就是著名的ABA问题<pre class="mermaid">sequenceDiagram
+前端->>商品服务: 1：改价100
+商品服务->>前端: 1.1: 响应丢失（修改成功）
+前端->>商品服务: 2：改价200
+前端->>商品服务: 1.2: 请求重发
+商品服务->>前端: 2.1 请求成功
+商品服务->>前端: 1.3 请求成功</pre></li>
+<li>上述场景，就会当值更新数据的错误，数据最终被错误的更新为第一次请求的值</li>
+</ul>
+<h3 id="解决方案-1"><a href="#解决方案-1" class="headerlink" title="解决方案"></a>解决方案</h3><ul>
+<li>在数据库中增加版本号的列，在修改数据时，where条件中增加当前版本号，并在修改数据后，给版本号+1<pre class="mermaid">sequenceDiagram
+前端->>商品服务: 1：改价100              版本号1
+商品服务->>前端: 1.1: 响应丢失（修改成功）版本号从1更新为2
+前端->>商品服务: 2：改价200              意图把版本号从1更新为2
+前端->>商品服务: 1.2: 请求重发           意图把版本号从1更新为2
+商品服务->>前端: 2.1 失败
+商品服务->>前端: 1.3 失败</pre></li>
+</ul>
+
             </div>
             <hr/>
 
@@ -456,7 +495,7 @@
                     <i class="fas fa-link">
                         文章链接:
                     </i>
-                </span>
+                    </span>
                 <span class="reprint-info">
                     <a href="http://wangyanga9.gitee.io/2020/06/12/idempotent-implementation-of-db-interface/">http://wangyanga9.gitee.io/2020/06/12/idempotent-implementation-of-db-interface/</a>
                 </span>
@@ -469,7 +508,7 @@
                 </span>
                 <span class="reprint-info">
                     本博客所有文章除特別声明外，均采用
-                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY-NC-ND 4.0</a>
                     许可协议。转载请注明来源
                     <a href="http://wangyanga9.gitee.io" target="_blank">WangYang</a>
                     !
@@ -671,34 +710,34 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/08/24/fabric-ca/">
+                <a href="/2020/06/27/shu-ju-ku-shi-wu-he-fen-bu-shi-shi-wu/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="Fabric证书与账户体系">
+                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="数据库事务和分布式事务">
                         
-                        <span class="card-title">Fabric证书与账户体系</span>
+                        <span class="card-title">数据库事务和分布式事务</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            成员提供者服务MSP(Membership service provider)
-Fabric的MSP是一个提供抽象化成员操作框架的组件
-MSP将颁发与校验证书，以及用户认证的密码学机制与协议都抽象了出来
-一个MSP可以自定义身份、身份管理(
+                            冗余数据
+冗余数据并不是指多余的数据，而是多分包含相同信息的数据
+原则上来说，我们不应该存储冗余数据。一方面是造成存储空间的浪费，另一方面，保证这些数据的同步更新是一件很麻烦的事情
+但是，在当前，存储成本相对较低，更为重要的是查询效率。大多
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2020-08-24
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-06-27
                         </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E5%8C%BA%E5%9D%97%E9%93%BE/" class="post-category">
-                                    区块链
+                            <a href="/categories/%E5%90%8E%E7%AB%AF%E6%8A%80%E6%9C%AF/" class="post-category">
+                                    后端技术
                                 </a>
                             
                             
@@ -708,12 +747,16 @@ MSP将颁发与校验证书，以及用户认证的密码学机制与协议都�
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/CA%E8%AF%81%E4%B9%A6/">
-                        <span class="chip bg-color">CA证书</span>
+                    <a href="/tags/%E5%AD%98%E5%82%A8/">
+                        <span class="chip bg-color">存储</span>
                     </a>
                     
-                    <a href="/tags/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/">
-                        <span class="chip bg-color">非对称加密</span>
+                    <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1/">
+                        <span class="chip bg-color">数据库事务</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/">
+                        <span class="chip bg-color">分布式事务</span>
                     </a>
                     
                 </div>
@@ -731,7 +774,7 @@ MSP将颁发与校验证书，以及用户认证的密码学机制与协议都�
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="data-switch">
+                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="data-switch">
                         
                         <span class="card-title">data-switch</span>
                     </div>
@@ -739,7 +782,14 @@ MSP将颁发与校验证书，以及用户认证的密码学机制与协议都�
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
+                            package main
+
+import "fmt"
+
+func main() {
+     fmt.Println("Hello, World!")
+}
+
                         
                     </div>
                     <div class="publish-info">
@@ -790,8 +840,6 @@ MSP将颁发与校验证书，以及用户认证的密码学机制与协议都�
 
 <!-- 代码语言 -->
 
-<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
-
     
 <!-- 代码块复制 -->
 
@@ -799,8 +847,6 @@ MSP将颁发与校验证书，以及用户认证的密码学机制与协议都�
 
 
 <!-- 代码块收缩 -->
-
-<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
 
 
 <!-- 代码块折行 -->
@@ -920,7 +966,7 @@ code[class*="language-"], pre[class*="language-"] { white-space: pre !important;
             <br>
             
             &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                class="white-color">3k</span>&nbsp;字
+                class="white-color">5.9k</span>&nbsp;字
             
             
             

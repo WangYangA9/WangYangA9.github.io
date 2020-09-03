@@ -46,16 +46,16 @@ relative_link: false
 future: true
 highlight:
   enable: false
-  line_number: true
+  line_number: false
   auto_detect: false
   tab_replace: ''
-  wrap: true
+  wrap: false
   hljs: false
 prism_plugin:
   mode: 'preprocess'    # realtime/preprocess
   theme: 'tomorrow'
   line_number: true    # default false
-  custom_css:
+  custom_css: 
 search:
   path: search.xml
   field: post
@@ -115,3 +115,4 @@ mermaid: ## mermaid url https://github.com/knsv/mermaid
   version: "7.1.2" # default v7.1.2 
   options:  # find more api options from https://github.com/knsv/mermaid/blob/master/src/mermaidAPI.js 
     #startOnload: true  // default true 
+    theme: neutral 

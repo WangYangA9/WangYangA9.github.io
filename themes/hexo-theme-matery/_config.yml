@@ -149,9 +149,9 @@ toc:
 
 # 代码块相关
 code:
-  lang: true # 代码块是否显示名称
+  lang: false # 代码块是否显示名称
   copy: true # 代码块是否可复制
-  shrink: true # 代码块是否可以收缩
+  shrink: false # 代码块是否可以收缩
   break: false # 代码是否折行
 
 # 是否激活文章末尾的打赏功能，默认激活（你替换为的你自己的微信、支付宝二维码图片、或者使用网络图片也可以）.
@@ -400,23 +400,6 @@ featureImages:
 - /medias/featureimages/4.jpg
 - /medias/featureimages/5.jpg
 - /medias/featureimages/6.jpg
-- /medias/featureimages/7.jpg
-- /medias/featureimages/8.jpg
-- /medias/featureimages/9.jpg
-- /medias/featureimages/10.jpg
-- /medias/featureimages/11.jpg
-- /medias/featureimages/12.jpg
-- /medias/featureimages/13.jpg
-- /medias/featureimages/14.jpg
-- /medias/featureimages/15.jpg
-- /medias/featureimages/16.jpg
-- /medias/featureimages/17.jpg
-- /medias/featureimages/18.jpg
-- /medias/featureimages/19.jpg
-- /medias/featureimages/20.jpg
-- /medias/featureimages/21.jpg
-- /medias/featureimages/22.jpg
-- /medias/featureimages/23.jpg
 
 # default configs that the default policy for every articles/posts
 # default 配置文章的默认转载规则
@@ -439,7 +422,7 @@ featureImages:
 # pay（付费转载 pay for reprinting）
 reprint:
   enable: true # whether enable reprint section 是否启用“转载规则限定模块”
-  default: cc_by
+  default: cc_by_nc_nd
 
 # DaoVoice online contact
 daovoice:
